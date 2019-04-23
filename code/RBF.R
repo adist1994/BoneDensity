@@ -1,4 +1,4 @@
-# RBF
+# RBF kernel
 
 Jmat <- function(m) {
   return(matrix(rep(1, m^2), ncol = m))
