@@ -33,17 +33,18 @@ gpsmooth <- function(x, trainlist) {
 
 # Posterior mean and cov matrix for test curve
 
-fit.gp <- function(trainx, trainy, testx, repnum, theta, kinv, N) {
+fit.gp <- function(train, testx, testy) {
   
   n <- length(testx)
   #kxx <- covmat(trainx, repnum , theta = theta[1:4])
-  kx <-  testcov(x = testx, y = trainx, theta = theta[1:4])
-  k <- kx %*% kinv
-  mu <- k %*% as.matrix(trainy)    
-  sigma <- testmat(x = testx, theta = theta[1:4]) + theta[5] * diag(n) - (k %*% t(kx))
+  kx <-  testcov(x = testx, y = train$trainx, theta = train$hyper[1:4])
+  k <- kx %*% train$kinv
+  mu <- k %*% as.matrix(train$trainy)    
+  sigma <- testmat(x = testx, theta = train$hyper[1:4]) + train$hyper[5] * diag(n) 
+  - (k %*% t(kx))
   sigma <- as.matrix(forceSymmetric(sigma))
-  
-  return(list(mu = mu, sigma = sigma))
+  logprob <- dmvnorm(testy, mean = mu, sigma = sigma, log = T)
+  return(logprob)
 }
 
 
@@ -57,6 +58,7 @@ feature <- function(train) {
   trainy <- train$spnbmd
   rep <- as.numeric(table(train$idnum))
   hyper <- Hyper(trainx = trainx, trainy = trainy, repnum = rep, N = N)
-  return(list(n = n,N = N,rep = rep, trainx = trainx, trainy = trainy, hyper = hyper))
+  kinv <- chol2inv(chol(covmat(trainx, rep , theta = hyper[1:4]) + hyper[5] * diag(N)))
+  return(list(n = n,N = N,rep = rep, trainx = trainx, trainy = trainy, hyper = hyper, kinv = kinv))
   
 }
