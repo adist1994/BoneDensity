@@ -9,31 +9,26 @@ Hyper <- function(trainx, trainy, repnum, N) {
   }
   
   hyp <- optim(par=rep(1, 5), fn = marlik, method = 'BFGS',
-               control=list(maxit = 10))
+               control=list(maxit = 10000))
   print(hyp)
   return(hyp$par^2)
   
 }
 
-esthyper <- function(trainlist) {
-  
-  return(hyper = list(Hyper(trainx = trainlist$trainx, trainy = trainlist$trainy, repnum = trainlist$rep, 
-        N = trainlist$N)))
-  
-}
+
 # Fit a smooth curve--------------------------------
 
-gpsmooth <- function(x, trainx, trainy, repnum, theta, N) {
+gpsmooth <- function(x, trainlist) {
   
-  kxx <- covmat(trainx, repnum , theta = theta[1:4])
-  kx <-  testcov(x = ageseq, y = trainx, theta = theta[1:4])
-  kinv <-  chol2inv(chol(kxx + theta[5] * diag(N)))
+  kxx <- covmat(trainx = trainlist$trainx, repnum = trainlist$rep, 
+                theta = trainlist$hyper[1:4])
+  kx <-  testcov(x = x, y = trainlist$trainx, theta = trainlist$hyper[1:4])
+  kinv <-  chol2inv(chol(kxx + trainlist$hyper[5] * diag(trainlist$N)))
   k <- kx %*% kinv
-  pred <- k %*% as.matrix(trainy)
+  pred <- k %*% as.matrix(trainlist$trainy)
   return(pred)
   
 }
-
 
 
 # Posterior mean and cov matrix for test curve
@@ -61,6 +56,7 @@ feature <- function(train) {
   trainx <- train$age
   trainy <- train$spnbmd
   rep <- as.numeric(table(train$idnum))
-  return(list(n = n,N = N,rep = rep, trainx = trainx, trainy = trainy))
+  hyper <- Hyper(trainx = trainx, trainy = trainy, repnum = rep, N = N)
+  return(list(n = n,N = N,rep = rep, trainx = trainx, trainy = trainy, hyper = hyper))
   
 }
