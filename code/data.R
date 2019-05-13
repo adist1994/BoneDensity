@@ -4,6 +4,7 @@ library(MASS)
 library(kernlab)
 library(mvtnorm)
 library(Matrix)
+library(optimx)
 
 # Read data
 bone <- read_csv("data/spnbmd.csv")
