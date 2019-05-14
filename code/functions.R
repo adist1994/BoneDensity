@@ -9,7 +9,7 @@ Hyper <- function(trainx, trainy, repnum, N) {
   }
   
   hyp <- optim(par=rep(1, 5), fn = marlik, method = 'BFGS',
-               control=list(maxit = 10000))
+               control=list(maxit = 10000, ndeps = rep(.00001, 5)))
   print(hyp)
   return(hyp$par^2)
   
@@ -40,10 +40,9 @@ fit.gp <- function(train, testx, testy) {
   kx <-  testcov(x = testx, y = train$trainx, theta = train$hyper[1:4])
   k <- kx %*% train$kinv
   mu <- k %*% as.matrix(train$trainy)    
-  sigma <- testmat(x = testx, theta = train$hyper[1:4]) + train$hyper[5] * diag(n) 
-  - (k %*% t(kx))
+  sigma <- testmat(x = testx, theta = train$hyper[1:4]) + (train$hyper[5] * diag(n)) - (k %*% t(kx))
   sigma <- as.matrix(forceSymmetric(sigma))
-  logprob <- dmvnorm(testy, mean = mu, sigma = sigma, log = T)
+  logprob <- dmvnorm(x = testy, mean = mu, sigma = sigma, log = T)
   return(logprob)
 }
 

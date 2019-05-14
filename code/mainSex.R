@@ -1,10 +1,13 @@
-
+source("code/RBF.R")
+source("code/laplace.R")
+source("code/matern52.R")
+source("code/matern32.R")
 
 fet <- lapply(train, feature) #estimate hyperparameter
 
 
 # Plot fitted
-ageseq <- seq(min(train$fem$age), max(train$fem$age), length = 100)
+ageseq <- seq(-3,3, length = 100)
 
 plot(fet$fem$trainx, fet$fem$trainy, pch = 16, col = 1, 
      cex=.5, xlab='Age', ylab='Spinal bone mineral density')
@@ -34,6 +37,6 @@ for (i in unique(test$idnum)) {
 
 y.pred <- log.prob[,1] > log.prob[,2]
 pred <- ifelse(y.pred == 0, 'mal', 'fem')
-table(y.pred, y)
+table(pred, y)
 err <- mean(pred != y)
 err
