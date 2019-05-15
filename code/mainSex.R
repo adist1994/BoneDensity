@@ -1,3 +1,6 @@
+source("code/functions.R")
+source("code/multistart.R")
+
 source("code/RBF.R")
 source("code/laplace.R")
 source("code/matern52.R")
@@ -40,3 +43,8 @@ pred <- ifelse(y.pred == 0, 'mal', 'fem')
 table(pred, y)
 err <- mean(pred != y)
 err
+
+
+#Training error
+#Full training
+#laplace : 0.2678571, RBF : 0.2857143, matern52: 0.2785714. matern32: 0.2857143
