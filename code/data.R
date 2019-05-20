@@ -39,5 +39,4 @@ test <-  bone[bone$idnum %in% q,]
 
 train <- split(train, train$sex) # for classifying sex
 
-train <- split(train, train$ethnic) # for classifying race
 

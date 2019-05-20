@@ -8,6 +8,7 @@ source("code/matern32.R")
 
 fet <- lapply(train, feature) #estimate hyperparameter
 
+#save(fet, file = 'matern32.Rdata')
 
 # Plot fitted
 ageseq <- seq(-3,3, length = 100)

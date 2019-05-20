@@ -1,0 +1,41 @@
+RBF
+
+     y
+pred  fem mal
+  fem 128  55
+  mal  25  72
+> err <- mean(pred != y)
+> err
+[1] 0.2857143
+
+Laplace
+
+     y
+pred  fem mal
+  fem 127  49
+  mal  26  78
+> err <- mean(pred != y)
+> err
+[1] 0.2678571
+
+
+Matern 52
+
+     y
+pred  fem mal
+  fem 130  55
+  mal  23  72
+> err <- mean(pred != y)
+> err
+[1] 0.2785714
+
+
+Matern 32
+
+     y
+pred  fem mal
+  fem 128  55
+  mal  25  72
+> err <- mean(pred != y)
+> err
+[1] 0.2857143
